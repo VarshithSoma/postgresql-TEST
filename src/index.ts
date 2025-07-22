@@ -4,9 +4,10 @@ dotenv.config({ path: "../.env" });
 const client = new Client({
   connectionString: process.env.POSTGRESQL_URL,
 });
-console.log(process.env.POSTGRESQL_URL);
+// console.log(process.env.POSTGRESQL_URL);
+client.connect();
 async function createUserTable() {
-  await client.connect();
+  // await client.connect();
   const res = await client.query(`
     CREATE TABLE users(
             id SERIAL PRIMARY KEY,
@@ -19,26 +20,38 @@ async function createUserTable() {
 }
 
 // createUserTable();
-async function insertData() {
+async function insertData(username: string, email: string, password: string) {
   try {
-    await client.connect();
+    // await client.connect();
     const query =
-      "insert into users (email,username,password) values ('varshithkumarsoma@gmail.com','varshithsoma','helloworld');";
-    const res = await client.query(query);
+      "insert into users (email,username,password) values ($1,$2,$3);";
+    const values = [username, email, password];
+    const res = await client.query(query, values);
     console.log("Insertion successful:", res);
   } catch (err) {
     console.log(err);
   }
 }
-// insertData();
+// insertData("username1", "test1@gmail.com", "password");
 async function getData() {
   try {
-    await client.connect();
+    // await client.connect();
     const query = "SELECT * FROM users";
     const res = await client.query(query);
-    console.log("data successful:", res);
+    console.log("data successful:", res.rows);
   } catch (err) {
     console.log(err);
   }
 }
-getData();
+// getData();
+async function getByEmail(email: string) {
+  try {
+    const query = "SELECT * FROM users where email=$1";
+    const values = [email];
+    const res = await client.query(query, values);
+    console.log(res.rows);
+  } catch (err) {
+    console.log(err);
+  }
+}
+getByEmail("varshithkumarsoma@gmail.com");
