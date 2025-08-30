@@ -8,15 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pg_1 = require("pg");
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: "../.env" });
+// dotenv.config({ path: "../.env" });
 const client = new pg_1.Client({
-    connectionString: process.env.POSTGRESQL_URL,
+    user: "postgres",
+    password: "password1234",
+    host: "localhost",
+    port: 5432,
+    database: "tutorial",
 });
 // console.log(process.env.POSTGRESQL_URL);
 client.connect();
@@ -39,7 +39,7 @@ function insertData(username, email, password) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // await client.connect();
-            const query = "insert into users (email,username,password) values ($1,$2,$3);";
+            const query = "insert into Users (email,username,password) values ($1,$2,$3);";
             const values = [username, email, password];
             const res = yield client.query(query, values);
             console.log("Insertion successful:", res);
@@ -49,7 +49,9 @@ function insertData(username, email, password) {
         }
     });
 }
-// insertData("username1", "test1@gmail.com", "password");
+insertData("username1", "test1@gmail.com", "password");
+insertData("username2", "test2@gmail.com", "password");
+insertData("username3", "test3@gmail.com", "password");
 function getData() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -63,7 +65,7 @@ function getData() {
         }
     });
 }
-// getData();
+getData();
 function getByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -77,4 +79,4 @@ function getByEmail(email) {
         }
     });
 }
-getByEmail("varshithkumarsoma@gmail.com");
+// getByEmail("varshithkumarsoma@gmail.com");
